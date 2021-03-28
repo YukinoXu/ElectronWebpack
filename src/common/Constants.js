@@ -1,0 +1,2 @@
+export const SOURCE_AZURE_BLOB = 'SOURCE_AZURE_BLOB';
+export const DEST_AZURE_BLOB = 'DEST_AZURE_BLOB';

@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button } from 'antd';
+import FilePicker from '../FilePicker/FilePicker';
+import styles from './LoginForm.module.scss';
+import { createSourceConnector, createDestConnector } from '../../data/api';
+import { SOURCE_AZURE_BLOB, DEST_AZURE_BLOB } from '../../common/Constants';
+import { SET_CONNECTION_STRING, SET_SOURCE_CONNECTOR_ID, SET_DEST_CONNECTOR_ID, SET_CONTAINER_NAME } from '../../actions/ActionTypes';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const layout = {
   labelCol: {
@@ -17,7 +23,36 @@ const tailLayout = {
 };
 
 export default function LoginForm() {
+  const { dispatch } = React.useContext(AuthContext);
+
   const onFinish = (values) => {
+    dispatch({
+      type: SET_CONNECTION_STRING,
+      payload: values.connectionString
+    });
+
+    createSourceConnector(SOURCE_AZURE_BLOB, values.connectionString)
+      .then((resp) => {
+        dispatch({
+          type: SET_SOURCE_CONNECTOR_ID,
+          payload: resp.id
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    createDestConnector(DEST_AZURE_BLOB, values.connectionString)
+      .then((resp) => {
+        dispatch({
+          type: SET_DEST_CONNECTOR_ID,
+          payload: resp.id
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    
     console.log('Success:', values);
   };
 
@@ -26,50 +61,40 @@ export default function LoginForm() {
   };
 
   return (
-    <Form
-      {...layout}
-      name="basic"
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-    >
-      <Form.Item
-        label="Username"
-        name="username"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
+    <div className={styles.container}>
+      <Form
+        {...layout}
+        name="basic"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
       >
-        <Input />
-      </Form.Item>
+        <Form.Item
+          label="Connection String"
+          name="connectionString"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your connection string!',
+            },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item
+          {...tailLayout}
+        >
+          <FilePicker />
+        </Form.Item>
 
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
-
-      <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+        <Form.Item {...tailLayout}>
+          <Button type="primary" htmlType="submit">
+            Authenticate
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
-};
+}

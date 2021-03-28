@@ -1,14 +1,20 @@
 import * as React from 'react';
-import ProgressBar from './components/ProgressBar/ProgressBar';
-import LoginFrom from './components/LoginForm/LoginForm';
 import styles from './App.module.scss';
 import 'antd/dist/antd.css';
+import { getConnector } from './data/api';
+import MigrationSteps from './components/MigrationSteps/MigrationSteps';
 
 export default function App() {
+  // React.useEffect(() => {
+  //   getConnector('e1336855-f744-4cdf-bf7a-93805d85ebe6').then((resp) => console.log(resp));
+  // }, []);
+
   return (
     <div className={styles.container}>
-      <ProgressBar />
-      <LoginFrom />
+      {/* <FileTable />
+      <ProgressBar /> */}
+      {/* <LoginFrom /> */}
+      <MigrationSteps />
     </div>
   );
 }
