@@ -22,7 +22,7 @@ const tailLayout = {
   },
 };
 
-export default function LoginForm() {
+export default function LoginForm(props) {
   const { dispatch } = React.useContext(AuthContext);
 
   const onFinish = (values) => {
@@ -54,6 +54,7 @@ export default function LoginForm() {
       });
     
     console.log('Success:', values);
+    props.onNextClick();
   };
 
   const onFinishFailed = (errorInfo) => {

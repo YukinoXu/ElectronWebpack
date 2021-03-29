@@ -2,7 +2,9 @@ import * as React from 'react';
 import { Steps, Button, message } from 'antd';
 import LoginFrom from '../LoginForm/LoginForm';
 import FileTable from '../FileTable/FileTable';
+import ProgressPage from '../ProgressPage/ProgressPage';
 import { AuthContextProvider } from '../../contexts/AuthContext';
+import { TaskContextProvider } from '../../contexts/TaskContext';
 
 const { Step } = Steps;
 
@@ -12,15 +14,15 @@ export function _MigrationSteps() {
   const steps = [
     {
       title: 'Authentication',
-      content: <LoginFrom />,
+      content: <LoginFrom onNextClick={() => next()} />,
     },
     {
       title: 'Select file',
-      content: <FileTable />,
+      content: <FileTable onNextClick={() => next()} />,
     },
     {
-      title: 'Last',
-      content: 'Last-content',
+      title: 'Migration',
+      content: <ProgressPage />,
     },
   ];
 
@@ -40,7 +42,7 @@ export function _MigrationSteps() {
         ))}
       </Steps>
       <div className="steps-content">{steps[current].content}</div>
-      <div className="steps-action">
+      {/* <div className="steps-action">
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
             Next
@@ -56,10 +58,10 @@ export function _MigrationSteps() {
             Previous
           </Button>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
 
-const MigrationSteps = AuthContextProvider(_MigrationSteps);
+const MigrationSteps = TaskContextProvider(AuthContextProvider(_MigrationSteps));
 export default MigrationSteps;

@@ -30,12 +30,12 @@ export function getItems(connectorId) {
   return axios.get(`${CONNECTOR}/${connectorId}/items`).then((resp) => resp.data);
 }
 
-export function createProjects(sourceConnectorId, destConnectorId, jobs, keyPath) {
+export function createProjects(sourceConnectorId, destConnectorId, jobs) {
   return axios.post(`${PROJECT}`, {
     sourceConnectorId: sourceConnectorId,
     destConnectorId: destConnectorId,
     jobs: jobs,
-    keyPath: keyPath
+    keyPath: 'D:\\key.zip'
   }).then((resp) => resp.data);
 }
 

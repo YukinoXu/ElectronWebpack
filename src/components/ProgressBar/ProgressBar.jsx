@@ -1,22 +1,12 @@
 import * as React from 'react';
+import { Label } from '@fluentui/react';
 import { Progress } from 'antd';
 
-const intervalDelay = 100;
-const intervalIncrement = 2;
-
-export default function ProgressBar() {
-  const [percentComplete, setPercentComplete] = React.useState(0);
-
-  React.useEffect(() => {
-    const id = setInterval(() => {
-      setPercentComplete((intervalIncrement + percentComplete) % 100);
-    }, intervalDelay);
-    return () => {
-      clearInterval(id);
-    };
-  });
-
+export default function ProgressBar(props) {
   return (
-    <Progress percent={percentComplete} />
+    <div>
+      <Label>{props.label}</Label>
+      <Progress percent={props.percentComplete || 0} />
+    </div>
   );
 }
